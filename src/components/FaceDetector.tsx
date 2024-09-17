@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, {  useRef, useState } from "react";
 import "../App.css";
 import "@mediapipe/face_detection";
 import "@tensorflow/tfjs-core";
