@@ -63,6 +63,7 @@ setTimeout(() => {
   function Start(e: Object): void {
     if (startCamera === false) {
       setStartCamera(true);
+      alert('Please wait while we identify your camera')
       setTimeout(() => {
         loadModel2();
         setShowCanvas(true);
