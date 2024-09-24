@@ -67,7 +67,7 @@ setTimeout(() => {
       setTimeout(() => {
         loadModel2();
         setShowCanvas(true);
-      }, 400);
+      }, 200);
     }
   }
   function Stop(e: Object): void {
