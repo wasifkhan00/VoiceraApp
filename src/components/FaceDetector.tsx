@@ -78,9 +78,12 @@ const FaceDetector = (props: any) => {
         const face = await detector.estimateFaces(WebCam, estimationConfig);
 
         if (face.length > 0) {
+ alert('If You are using Android or Ios, Some buttons may not properly respond to touches, We are wroking on this issue, We are Sorry for the inconvenience Try Using Mozila FireFox on Android/ios')
+
           props.setIsVisible(false);
           setShowSuccess(true);
         } else {
+          alert('If You are using Android or Ios, Some buttons may not properly respond to touches, We are wroking on this issue, We are Sorry for the inconvenience Try Using Mozila FireFox on Android/ios')
           props.setIsVisible(false);
           setShowFailure(true);
         }
