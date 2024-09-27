@@ -54,7 +54,7 @@ const FaceDetector = (props: any) => {
     };
 
     checkPermissions();
-  }, []);
+  }, [permissionGranted]);
 
   const loadModel2 = async () => {
     const WebCam: any = document.getElementById("WebCam");
