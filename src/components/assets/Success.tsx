@@ -2,15 +2,9 @@ import React, { useContext } from "react";
 import { dataProviderContext } from "../contexts/DataProviderContext";
 
 const SuccessModal = () => {
-  const {
-    showSuccess,
-    showFailure,
-    setShowSuccess,
-    setShowFailure,
-    setShowWarning,
-    setShowStopButton,
-  } = useContext(dataProviderContext);
-  const handlebutton = (e: any): void => {
+  const { showSuccess, showFailure, setShowSuccess, setShowFailure,setShowWarning,setShowStopButton } =
+    useContext(dataProviderContext);
+  const handlebutton = (e: any):void => {
     const innerHTML = e.target.innerHTML;
 
     switch (innerHTML) {
@@ -21,11 +15,12 @@ const SuccessModal = () => {
 
       case "Okay":
         setShowSuccess(false);
+     
+            setTimeout(() => {
+              setShowWarning(true);
+        setShowStopButton(true)
 
-        setTimeout(() => {
-          setShowWarning(true);
-          setShowStopButton(true);
-        }, 2000);
+            }, 2000);
         break;
 
       default:
@@ -33,13 +28,14 @@ const SuccessModal = () => {
     }
   };
 
-  const handleOkay = () => {
+  const handleOkay = () =>{
     setShowFailure(false);
-    setShowStopButton(true);
+    setShowStopButton(true)
     setTimeout(() => {
-      setShowWarning(true);
-    }, 2000);
-  };
+        setShowWarning(true);
+      }, 2000);
+
+  }
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
@@ -66,13 +62,19 @@ const SuccessModal = () => {
                 : "bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 focus:outline-none"
             }
             onClick={handlebutton}
+            onTouchEnd={handlebutton}
+            onTouchStart={handlebutton}
           >
             {showSuccess ? "Okay" : "Reload"}
           </button>
           {showFailure && !showSuccess ? (
             <button
-              className={"bg-blue-500 text-white rounded px-4 py-2 ml-2"}
+              className={
+                "bg-blue-500 text-white rounded px-4 py-2 ml-2"
+              }
               onClick={handleOkay}
+              onTouchEnd={handleOkay}
+              onTouchStart={handleOkay}
             >
               Ok
             </button>
