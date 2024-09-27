@@ -10,22 +10,16 @@
   justify-content: space-around;
 }
 .webcamparent {
-  display: flex;
   justify-content: space-around;
-  width: 45%;
-  max-width: 50%;
-  min-width: 40%;
-  height: 22em;
   align-items: center;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: center;
 }
 .canvas {
-  width: 45%;
-  max-width: 58%;
-  min-width: 39%;
-  height: 21.9em;
+  width: -webkit-fill-available;
+  height: auto;
+  margin-block: auto;
 }
 #webcamButtons button {
   width: 50px;
@@ -39,4 +33,44 @@
 .webcamButtons {
   display: flex;
   margin: 0 14rem;
+}
+.commonButton {
+  cursor: pointer;
+  background: transparent;
+  color: black;
+  border: 1px solid red;
+  box-shadow: 3px 3px 8px #d82c2c !important;
+}
+.greenBTN {
+  border: 1px solid #21aa5e !important;
+  box-shadow: 3px 3px 8px #419a61 !important;
+}
+.hide {
+  display: none !important;
+}
+
+.visible {
+  display: flex !important;
+  flex-direction: column;
+  width: auto;
+}
+.loadingRightSideContainer {
+  font-size: 10px;
+  font-family: monospace;
+}
+
+#rightSIdeImageContainer {
+  margin-top: 7.5rem;
+}
+
+@media (max-width: 808px) {
+  #rightSIdeImageContainer {
+    width: 85% !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .webcamparent {
+    height: 21rem;
+  }
 }
