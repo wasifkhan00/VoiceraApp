@@ -91,7 +91,7 @@ const FaceDetector = (props: any) => {
       setErrorMessage(
         "It looks like you're having a network problem, Please Reload The Website and if the error persisted Please report it to the developer at ukhanwasif00@gmail.com"
       );
-      // setShowError(true);
+      setShowError(true);
     }
   };
 
