@@ -16,8 +16,8 @@ const Layout = () => {
 
   return (
     <>
-      <div className="flex justify-center h-screen bg-gray-100">
-        <div className="w-1/2 flex items-center justify-center  p-4">
+      <div className="flex justify-center h-screen bg-gray-100 layoutParent">
+        <div className="w-1/2 flex items-center justify-center p-4 layoutChild">
           <div className="w-full h-full bg-gradient-to-r from-gray-100 to-gray-200 flex items-center justify-center ">
             <div className="w-full h-full object-cover">
               <h5 className="text-center font-mono">
@@ -35,7 +35,7 @@ const Layout = () => {
         <div className="w-1/2 flex flex-row items-center justify-center p-4  ">
           <div
             style={containerStyles}
-            className="w-full flex flex-row h-full bg-gradient-to-r from-gray-200 to-gray-100   items-center justify-center"
+            className="w-full flex flex-row h-full bg-gradient-to-r from-gray-200 to-gray-100   items-center justify-center containerStyles"
           >
             <h5 className="text-center font-mono">Detected Face</h5>
 
