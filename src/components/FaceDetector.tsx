@@ -1,15 +1,60 @@
-import React, {  useRef, useState } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import "../App.css";
 import "@mediapipe/face_detection";
 import "@tensorflow/tfjs-core";
 import "@tensorflow/tfjs-backend-webgl";
 import * as faceDetection from "@tensorflow-models/face-detection";
 import Webcam from "react-webcam";
+import { dataProviderContext } from "./contexts/DataProviderContext";
 
-const FaceDetector = () => {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const [startCamera, setStartCamera] = useState<Boolean>(false);
-  const [showCanvas, setShowCanvas] = useState<Boolean>(false);
+const FaceDetector = (props: any) => {
+  const [startCamera, setStartCamera] = useState<Boolean>(true);
+
+  const {
+    permissionGranted,
+    showStopButton,
+    setShowStopButton,
+    setPermissionGranted,
+    setCircleLoader,
+    setIsLoading,
+    setShowFailure,
+    setShowSuccess,
+    setShowError,
+    setErrorMessage,
+  } = useContext(dataProviderContext);
+
+  useEffect(() => {
+    props.setIsVisible(true);
+
+    if (permissionGranted && startCamera) {
+      setTimeout(() => {
+        loadModel2();
+        setShowStopButton(false);
+      }, 200);
+    }
+  }, [permissionGranted]);
+
+  useEffect(() => {
+    const checkPermissions = async () => {
+      setCircleLoader(true);
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({
+          video: true,
+        });
+        setPermissionGranted(true);
+        setCircleLoader(false);
+        stream.getTracks().forEach((track) => track.stop());
+      } catch (error) {
+        setErrorMessage(
+          "Webcam Permission Denied! Please Reload & Provide The Permission"
+        );
+        setShowError(true);
+        setPermissionGranted(false);
+      }
+    };
+
+    checkPermissions();
+  }, []);
 
   const loadModel2 = async () => {
     const WebCam: any = document.getElementById("WebCam");
@@ -23,83 +68,104 @@ const FaceDetector = () => {
         model,
         detectorConfig
       );
+
       const estimationConfig = { flipHorizontal: false };
 
-      const canvas = canvasRef.current;
+      const canvas = props.canvas.current;
       if (canvas !== null) {
         const ctx = canvas.getContext("2d");
 
         const face = await detector.estimateFaces(WebCam, estimationConfig);
+
         if (face.length > 0) {
-          alert("Human Face Has been Detected");
+          props.setIsVisible(false);
+          setShowSuccess(true);
         } else {
-          alert("Human Face Has not been detected");
+          props.setIsVisible(false);
+          setShowFailure(true);
         }
+
         drawBoundingBoxes(face, ctx);
       }
     } catch {
-      throw Error;
+      setErrorMessage(
+        "It looks like you're having a network problem, Please Reload The Website and if the error persisted Please report it to the developer at ukhanwasif00@gmail.com"
+      );
+      setShowError(true);
     }
   };
 
-  const drawBoundingBoxes = (face: any[], ctx: any) => {
+  const drawBoundingBoxes = async (face: any[], ctx: any) => {
     const WebCam: any = document.getElementById("WebCam");
 
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
     ctx.strokeStyle = "red";
     ctx.lineWidth = 2;
-    const canvas = canvasRef.current;
+    props.setIsVisible(false);
+    const canvas = props.canvas.current;
     if (canvas !== null) {
       ctx.drawImage(WebCam, 0, 0, canvas.width, canvas.height);
     }
     ctx.strokeRect(50, 50, 200, 90);
-
-setTimeout(() => {
-    
-    alert('stop the camera and then start it to capture/detect new image')
-}, 4000);
   };
 
   function Start(e: Object): void {
+    setIsLoading(true);
+    props.setIsVisible(true);
+
     if (startCamera === false) {
       setStartCamera(true);
-      alert('Please wait while we identify the target in your camera')
-      setTimeout(() => {
-        loadModel2();
-        setShowCanvas(true);
-      }, 200);
+
+      if (permissionGranted) {
+        setTimeout(() => {
+          loadModel2();
+          setShowStopButton(false);
+        }, 200);
+      }
     }
   }
   function Stop(e: Object): void {
-    if (startCamera === true) {
-      setShowCanvas(false);
+    const canvas = props.canvas.current;
+    setIsLoading(false);
+    props.setIsVisible(false);
 
+    if (canvas !== null) {
+      const ctx = canvas.getContext("2d");
+      ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+    }
+    if (startCamera === true) {
       setStartCamera(false);
     }
   }
 
   return (
-    <div className="parent">
-      <div className="webcamparent canvas">
+    <div className="parent w-full h-full object-cover">
+      <div className="webcamparent">
         {startCamera ? <Webcam id="WebCam" /> : null}
-        <div id="webcamButtons">
-          <button
-            style={{ cursor: !startCamera ? "pointer" : "auto" }}
-            disabled={startCamera ? true : false}
-            onClick={Start}
-          >
-            Start
-          </button>
-          <button
-            style={{ cursor: startCamera ? "pointer" : "auto" }}
-            disabled={startCamera ? false : true}
-            onClick={Stop}
-          >
-            Stop
-          </button>
+        <div id="">
+          <div className="space-x-2">
+            {!startCamera ? (
+              <button
+                style={{ cursor: !startCamera ? "pointer" : "auto" }}
+                disabled={startCamera ? true : false}
+                onClick={Start}
+                className="px-6 font-mono  py-1 text-xs text-black  rounded-lg shadow hover:bg-green-100 transition duration-300 commonButton greenBTN"
+              >
+                Start
+              </button>
+            ) : (
+              <button
+                style={{ cursor: startCamera ? "pointer" : "auto" }}
+                disabled={showStopButton ? false : true}
+                onClick={Stop}
+                className="px-6 font-mono  py-1 text-xs text-black  rounded-lg shadow hover:bg-red-100 transition duration-300 commonButton"
+              >
+                Stop
+              </button>
+            )}
+          </div>
         </div>
       </div>
-      {showCanvas ? <canvas className="canvas" ref={canvasRef}></canvas> : null}
     </div>
   );
 };
