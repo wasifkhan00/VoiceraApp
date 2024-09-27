@@ -73,4 +73,42 @@
   .webcamparent {
     height: 21rem;
   }
+
+  .canvas {
+    margin-top: 11rem !important;
+  }
+}
+@media (max-width: 470px) {
+  .layoutParent {
+    width: fit-content !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  .webcamparent {
+    height: 38vh !important;
+  }
+  .canvas {
+    margin-top: 0 !important;
+  }
+
+  .containerStyles {
+    width: auto !important;
+  }
+
+  #rightSIdeImageContainer {
+    margin-top: 0px !important;
+  }
+  .layoutChild {
+    width: 57%;
+    padding: 10px;
+  }
+  .parent {
+    width: 100%;
+    margin-top: 0;
+    display: block;
+    justify-content: space-around;
+  }
 }
