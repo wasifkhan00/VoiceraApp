@@ -9,6 +9,12 @@ import { dataProviderContext } from "./contexts/DataProviderContext";
 
 const FaceDetector = (props: any) => {
   const [startCamera, setStartCamera] = useState<Boolean>(true);
+  const [axiosFailed, setAxiosFailed] = useState<Boolean>(false);
+  const [retryAttempts, setRetryAttempts] = useState<number>(3);
+  const alertWarningCrossBrowsers =
+    "If You are using Android or Ios, Some buttons may not properly respond to touches, We are wroking on this issue, We are Sorry for the inconvenience Try Using Mozila FireFox on Android/ios";
+  const apiCallFailedMessage =
+    "It looks like you're having a network problem, Please Reload The Website and if the error persisted Please report it to the developer at ukhanwasif00@gmail.com";
 
   const {
     permissionGranted,
@@ -58,17 +64,16 @@ const FaceDetector = (props: any) => {
 
   const loadModel2 = async () => {
     const WebCam: any = document.getElementById("WebCam");
+    const model = faceDetection.SupportedModels.MediaPipeFaceDetector;
+    const detectorConfig: any = {
+      runtime: "tfjs",
+    };
 
     try {
-      const model = faceDetection.SupportedModels.MediaPipeFaceDetector;
-      const detectorConfig: any = {
-        runtime: "tfjs",
-      };
       const detector = await faceDetection.createDetector(
         model,
         detectorConfig
       );
-
       const estimationConfig = { flipHorizontal: false };
 
       const canvas = props.canvas.current;
@@ -78,12 +83,12 @@ const FaceDetector = (props: any) => {
         const face = await detector.estimateFaces(WebCam, estimationConfig);
 
         if (face.length > 0) {
- alert('If You are using Android or Ios, Some buttons may not properly respond to touches, We are wroking on this issue, We are Sorry for the inconvenience Try Using Mozila FireFox on Android/ios')
+          alert(alertWarningCrossBrowsers);
 
           props.setIsVisible(false);
           setShowSuccess(true);
         } else {
-          alert('If You are using Android or Ios, Some buttons may not properly respond to touches, We are wroking on this issue, We are Sorry for the inconvenience Try Using Mozila FireFox on Android/ios')
+          alert(alertWarningCrossBrowsers);
           props.setIsVisible(false);
           setShowFailure(true);
         }
@@ -91,13 +96,21 @@ const FaceDetector = (props: any) => {
         drawBoundingBoxes(face, ctx);
       }
     } catch {
-      setErrorMessage(
-        "It looks like you're having a network problem, Please Reload The Website and if the error persisted Please report it to the developer at ukhanwasif00@gmail.com"
-      );
-      // setShowError(true);
+      setErrorMessage(apiCallFailedMessage);
+      setRetryAttempts((prev) => (prev > 0 ? prev - 1 : prev));
+      setAxiosFailed(true);
     }
   };
-
+  useEffect(() => {
+    if (axiosFailed && retryAttempts > 0) {
+      setTimeout(() => {
+        loadModel2();
+      }, 1000);
+    } else if (axiosFailed && retryAttempts === 0) {
+      setErrorMessage(apiCallFailedMessage);
+      // setShowError(true);
+    }
+  }, [retryAttempts, axiosFailed]);
   const drawBoundingBoxes = async (face: any[], ctx: any) => {
     const WebCam: any = document.getElementById("WebCam");
 
