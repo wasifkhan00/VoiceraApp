@@ -1,5 +1,5 @@
 # Getting Started with Create React App
-
+If You want to contribute to this project and have any idea of making a big project and want me to collaborate on it Please don't hesitate to reach me out.
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
