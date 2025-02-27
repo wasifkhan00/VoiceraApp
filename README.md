@@ -3,7 +3,7 @@ If You want to contribute to this project and have any idea of making a big proj
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
-
+///
 In the project directory, you can run:
 
 ### `npm start or npm run dev`
